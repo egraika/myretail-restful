@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: MyRetailRestful
+  data:
+    mongodb:
+      uri: ${MONGOURL}
+      database: myRetailDB
+server:
+  port: ${PORT:8081}
+external:
+  api:
+    url: ${REDSKYURL}
+logging:
+  level:
+    com.egraika.retailrestful: DEBUG
