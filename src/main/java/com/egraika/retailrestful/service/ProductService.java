@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.egraika.retailrestful.model.RedskyResponse;
 import java.util.concurrent.CompletableFuture;
+import org.springframework.cache.annotation.Cacheable;
 
 @Service
 public class ProductService {
@@ -26,6 +27,9 @@ public class ProductService {
     @Value("${external.api.url}")
     private String externalApiUrl;
 
+    @Value("${redskykey}")
+    private String redSkyKey;
+
     public CompletableFuture<Price> getPriceAsync(String id) {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -37,12 +41,31 @@ public class ProductService {
         });
     }
 
+    public CompletableFuture<ProductResponse> getProductDetails(String id) {
+        CompletableFuture<Price> priceFuture = getPriceAsync(id);
+        CompletableFuture<String> nameFuture = getProductNameAsync(id);
+
+        return priceFuture.thenCombine(nameFuture, (price, name) -> {
+            try {
+                ProductResponse response = new ProductResponse();
+                response.setId(price.getId());
+                response.setName(name);
+                response.setCurrentPrice(new ProductResponse.CurrentPrice(
+                        price.getCurrentPrice().getValue(),
+                        price.getCurrentPrice().getCurrencyCode()
+                ));
+                return response;
+            } catch (Exception e) {
+                logger.error("Error combining product details for id {}: {}", id, e.getMessage());
+                throw new RuntimeException("Error combining product details", e);
+            }
+        });
+    }
+
     public CompletableFuture<String> getProductNameAsync(String id) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                String externalUrl = externalApiUrl + id;
-                // Serialize the response into RedskyResponse
-                RedskyResponse response = restTemplate.getForObject(externalUrl, RedskyResponse.class);
+                RedskyResponse response = RedSkyApiCall(id);
 
                 // Log the full response object
                 logger.debug("Response from external API for id {}: {}", id, response);
@@ -69,30 +92,23 @@ public class ProductService {
         });
     }
 
-    public CompletableFuture<ProductResponse> getProductDetails(String id) {
-        CompletableFuture<Price> priceFuture = getPriceAsync(id);
-        CompletableFuture<String> nameFuture = getProductNameAsync(id);
+    @Cacheable(value = "productNameCache", key = "#id")
+    public RedskyResponse RedSkyApiCall(String id) {
+        try {
+            //TODO String builder instead
+            String externalUrl = externalApiUrl + "/redsky_aggregations/v1/redsky/case_study_v1?key=" + redSkyKey + "&tcin=" + id;
 
-        return priceFuture.thenCombine(nameFuture, (price, name) -> {
-            try {
-                ProductResponse response = new ProductResponse();
-                response.setId(price.getId());
-                response.setName(name);
-                response.setCurrentPrice(new ProductResponse.CurrentPrice(
-                        price.getCurrentPrice().getValue(),
-                        price.getCurrentPrice().getCurrencyCode()
-                ));
-                return response;
-            } catch (Exception e) {
-                logger.error("Error combining product details for id {}: {}", id, e.getMessage());
-                throw new RuntimeException("Error combining product details", e);
-            }
-        });
+            return restTemplate.getForObject(externalUrl, RedskyResponse.class);
+        } catch (Exception e) {
+            logger.error("Error during RedSky API call for ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("Failed to fetch data from external API", e);
+        }
     }
 
     public void updateProductPrice(String id, Price price) {
         try {
             priceRepository.save(price);
+            logger.info("Updated price for id {}: {}", id, price);
         } catch (Exception e) {
             logger.error("Error updating price for id {}: {}", id, e.getMessage());
             throw new RuntimeException("Error updating price", e);

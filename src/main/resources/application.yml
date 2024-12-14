@@ -1,4 +1,8 @@
 spring:
+  cache:
+    cache-names: productNameCache
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=3600s
   application:
     name: MyRetailRestful
   data:
@@ -6,10 +10,14 @@ spring:
       uri: mongodb+srv://${MONGOUSER}:${MONGOPASSWORD}@myretailrestful.vfytq.mongodb.net/?retryWrites=true&w=majority&appName=MyRetailRestful
       database: myRetailDB
 server:
-  port: ${PORT:8081}
+  port: ${PORT:8080}
 external:
   api:
-    url: https://redsky-uat.perf.target.com/redsky_aggregations/v1/redsky/case_study_v1?key=${REDSKYKEY}&tcin=
+    url: https://redsky-uat.perf.target.com
 logging:
   level:
     com.egraika.retailrestful: INFO
+
+
+
+redskykey: ${REDSKYKEY:testkey}
