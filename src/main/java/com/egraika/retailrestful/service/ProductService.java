@@ -26,12 +26,6 @@ public class ProductService {
     @Value("${external.api.url}")
     private String externalApiUrl;
 
-    @Value("${mongodb.user}")
-    private String mongoDbUser;
-
-    @Value("${mongodb.password}")
-    private String mongoDbPassword;
-
     public CompletableFuture<Price> getPriceAsync(String id) {
         return CompletableFuture.supplyAsync(() -> {
             try {
