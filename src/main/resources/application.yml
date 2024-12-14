@@ -7,7 +7,7 @@ spring:
     name: MyRetailRestful
   data:
     mongodb:
-      uri: mongodb+srv://${MONGOUSER}:${MONGOPASSWORD}@myretailrestful.vfytq.mongodb.net/?retryWrites=true&w=majority&appName=MyRetailRestful
+      uri: mongodb+srv://${MONGOUSER:replaceuser}:${MONGOPASSWORD:replacepassword}@myretailrestful.vfytq.mongodb.net/?retryWrites=true&w=majority&appName=MyRetailRestful
       database: myRetailDB
 server:
   port: ${PORT:8080}

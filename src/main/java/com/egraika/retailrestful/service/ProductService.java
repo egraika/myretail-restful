@@ -97,8 +97,10 @@ public class ProductService {
         try {
             //TODO String builder instead
             String externalUrl = externalApiUrl + "/redsky_aggregations/v1/redsky/case_study_v1?key=" + redSkyKey + "&tcin=" + id;
-
-            return restTemplate.getForObject(externalUrl, RedskyResponse.class);
+            RedskyResponse redskyResponse = new RedskyResponse();
+            redskyResponse.getData().getProduct().getItem().getProductDescription().setTitle("testing");
+            return redskyResponse;
+            //return restTemplate.getForObject(externalUrl, RedskyResponse.class);
         } catch (Exception e) {
             logger.error("Error during RedSky API call for ID {}: {}", id, e.getMessage());
             throw new RuntimeException("Failed to fetch data from external API", e);

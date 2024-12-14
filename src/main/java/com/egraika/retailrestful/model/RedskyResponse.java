@@ -44,4 +44,12 @@ public class RedskyResponse {
         @JsonProperty("downstream_description")
         private String downstreamDescription;
     }
+
+    public RedskyResponse() {
+        // Initialize the nested objects so they are never null.
+        this.data = new RedskyData();
+        this.data.setProduct(new Product());
+        this.data.getProduct().setItem(new Item());
+        this.data.getProduct().getItem().setProductDescription(new ProductDescription());
+    }
 }
