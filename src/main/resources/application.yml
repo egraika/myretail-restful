@@ -3,13 +3,13 @@ spring:
     name: MyRetailRestful
   data:
     mongodb:
-      uri: ${MONGOURL}
+      uri: mongodb+srv://${MONGOUSER}:${MONGOPASSWORD}@myretailrestful.vfytq.mongodb.net/?retryWrites=true&w=majority&appName=MyRetailRestful
       database: myRetailDB
 server:
   port: ${PORT:8081}
 external:
   api:
-    url: ${REDSKYURL}
+    url: https://redsky-uat.perf.target.com/redsky_aggregations/v1/redsky/case_study_v1?key=${REDSKYKEY}&tcin=
 logging:
   level:
-    com.egraika.retailrestful: DEBUG
+    com.egraika.retailrestful: INFO

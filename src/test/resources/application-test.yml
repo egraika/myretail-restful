@@ -3,10 +3,10 @@ spring:
     name: MyRetailRestful
   data:
     mongodb:
-      uri: mongodb+srv://targetUser1:jeMIFpAEkvZEgfmm@myretailrestful.vfytq.mongodb.net/?retryWrites=true&w=majority&appName=MyRetailRestful
+      uri: mongodb+srv://${MONGOUSER}:${MONGOPASSWORD}@myretailrestful.vfytq.mongodb.net/?retryWrites=true&w=majority&appName=MyRetailRestful
       database: myRetailDB
 server:
-  port: 8081
+  port: ${PORT:8081}
 external:
   api:
-    url: https://redsky-uat.perf.target.com/redsky_aggregations/v1/redsky/case_study_v1?key=3yUxt7WltYG7MFKPp7uyELi1K40ad2ys&tcin=
+    url: https://redsky-uat.perf.target.com/redsky_aggregations/v1/redsky/case_study_v1?key=${REDSKYKEY}&tcin=
