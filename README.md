@@ -30,9 +30,10 @@ This application uses **MongoDB** hosted on [MongoDB Atlas](https://www.mongodb.
 
 1. **User Authentication**  
    Add authentication and authorization for securing the API.
-
-2. **Groovy/Spock Integration Tests**  
+2. **Swagger Integration**  
+   Include Swagger documentation for API endpoints.
+3. **Groovy/Spock Integration Tests**  
    Write integration tests for the API using **Groovy/Spock** (I was unable to complete this due to issues installing Docker on my personal Windows machine).
-3. **Metrics and Alerting**
+4. **Metrics and Alerting**
 
 ---
