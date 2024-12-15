@@ -6,7 +6,7 @@ This is a simple RESTful application hosted on **Heroku**.
 
 - **Hosted URL**: [MyRetail RESTful API](https://myretail-restful-66be21578f77.herokuapp.com/products/{id})
 - **Note**: The only product currently loaded into the database is **ID=13860428**
-- ~~**Swagger Documentation**: [Swagger UI](https://myretail-restful-66be21578f77.herokuapp.com/swagger-ui.html)~~
+- ~~**Swagger Documentation**: [Swagger UI](https://myretail-restful-66be21578f77.herokuapp.com/swagger-ui.html)~~ - still accessible but deprecated due to issues the code was causing with serialization
 
 ---
 
